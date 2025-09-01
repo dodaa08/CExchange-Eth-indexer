@@ -1,6 +1,4 @@
-import mongoose from "mongoose";
 import { Schema, model } from "mongoose";
-
 
 const userSchema = new Schema({
     email : {
@@ -11,6 +9,16 @@ const userSchema = new Schema({
     password : {
         type : String,
         required : true
+    },
+    DepositAddress : {
+        type : String,
+        required : true,
+        unique : true
+    },
+    userId : {
+        type : String,
+        required : true,
+        unique : true
     }
 });
 
