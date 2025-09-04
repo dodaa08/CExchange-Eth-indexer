@@ -6,8 +6,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
-app.use(express.json())
-
+app.use(express.json());
 
 app.use(
   cors({
@@ -15,8 +14,8 @@ app.use(
   })
 );
 
-app.use("/auth", authRouter);
-app.use("/findAddress", depositAddressRoute);
+app.use("/api/auth", authRouter);
+app.use("/api/getAddress", depositAddressRoute);
 
 const PORT = process.env.PORT || 5000;
 const connection = process.env.MONGO_DB_CONNECTION || "";

@@ -19,6 +19,9 @@ const getDepositAddress = async (req, res) => {
         console.error(error);
     }
 };
-depositAddressRoute.get("/deposit-address/:userid", getDepositAddress);
+depositAddressRoute.get("/depositAddress/:userid", getDepositAddress);
+depositAddressRoute.get("/health", (req, res) => {
+    res.send("Route working");
+});
 export default depositAddressRoute;
 //# sourceMappingURL=route.js.map

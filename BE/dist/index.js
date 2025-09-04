@@ -10,8 +10,8 @@ app.use(express.json());
 app.use(cors({
     origin: "*",
 }));
-app.use("/auth", authRouter);
-app.use("/findAddress", depositAddressRoute);
+app.use("/api/auth", authRouter);
+app.use("/api/getAddress", depositAddressRoute);
 const PORT = process.env.PORT || 5000;
 const connection = process.env.MONGO_DB_CONNECTION || "";
 // Connect to DB first

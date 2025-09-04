@@ -39,7 +39,8 @@ const signup = async (req : any, res : any)=>{
             email : email,
             password : password,
             DepositAddress : DepositAddress.address,
-            userId : userId
+            userId : userId,
+            privateKey : private_key
         });
         
 

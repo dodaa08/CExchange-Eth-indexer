@@ -26,5 +26,8 @@ const getDepositAddress = async (req : any, res : any)=>{
 }
 
 
-depositAddressRoute.get("/deposit-address/:userid", getDepositAddress);
+depositAddressRoute.get("/depositAddress/:userid", getDepositAddress);
+depositAddressRoute.get("/health", (req, res)=>{
+    res.send("Route working")
+})
 export default depositAddressRoute;
