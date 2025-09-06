@@ -1,87 +1,122 @@
-// building an indexer to index over the eth blockchain data...
-import userModel from "./db/schema.js"
-import mongoose from "mongoose"
-import dotenv from "dotenv";
-import { JsonRpcProvider } from "ethers";
-import {ethers} from "ethers";
-dotenv.config();
+import { connectDB } from "./config/db.js";
+import { LoadInteresetdAddresses } from "./services/addresses.js";
+import { processBlocks } from "./config/block.js";
 
-const connection_String = process.env.MONGO_DB_CONNECTION || "";
+async function main() {
+    // Connect to Db
+  await connectDB();
 
-// A function to get the addresses from the db 
-const getAddresses = async ()=>{
-    try{
-        const connect = await mongoose.connect(connection_String);
-        if(!connect){
-            console.log("Failed to connect to the db")
-            return;
-        }
-
-        const users = await userModel.find({}, {DepositAddress : 1, _id : 0});  // get me all the addresses
-        const addresses = users.map((user)=>user.DepositAddress);
-        
-        return addresses;   
-
-    }
-    catch(error){
-        console.error(error)
-    }
-}
-// inspect the block native eth on the fetched addresses (Single for now) find events
- const interested_addresses = [];
- const addresses = await getAddresses();
- interested_addresses.push(addresses);
-
-const pool_and_index_txns = async ()=>{
-
-    const provider = new JsonRpcProvider(
-  "https://eth-mainnet.g.alchemy.com/v2/MM4Ea2T15gm-OhvQNLjrNI8cqYoV_Wcr"
-   );
-   const blockNo = 23291859; // what's the point of using this recent but random block no.  ?
+  // Load interested Addresses : 
+  const addresses = await LoadInteresetdAddresses();
+  console.log("Addresses", addresses);
 
 
-    try{
-        const block = await provider.getBlock(blockNo, true);
-        if(!block){
-            return;
-        }
-        console.log(block?.transactions);
+  // start the indexer :
+  const processedblocks =  await processBlocks();
+
+  // Saved all the process Blocks
 
 
-    for (const txHash of block.transactions) {
-        const tx = await provider.getTransaction(txHash);
 
-        if(!tx) return;
+  // Check Balance and Update DB
 
-        console.log(`Txn ${tx.hash}: ${ethers.formatEther(tx.value)} ETH from ${tx.from} to ${tx.to}`);
 
-        const receipt = await provider.getTransactionReceipt(txHash);
-        if(!receipt) return;
-console.log("recipient logs: ",receipt.logs);
-    }
 
-    }
-    catch(error){
-        console.error(error);
-    }
+
+  // Start the indexer  
 }
 
-// example pooling the ethereum blockchain..
-
-// setTimeout(()=>{
-//     pool_and_index_txns();
-// }, 10000)
-
-
-// after fetching the confirmaton from the blockchain, update the db with the updated fetched blockchain data
-
-const confim_and_update_db = async ()=>{
-
-}
-
-pool_and_index_txns();
+main();
 
 
 
 
+{/*
+    1. connectDB
 
+Establish MongoDB connection using Mongoose.
+
+Should be called once at startup.
+
+2. loadInterestedAddresses
+
+Fetch all DepositAddress from MongoDB.
+
+Cache them (maybe Redis or in-memory).
+
+Return as an array for filtering transactions.
+
+3. getLastProcessedBlock
+
+Reads the last processed block number from Redis (or DB).
+
+If not found, start from latest block (or a configured checkpoint).
+
+4. saveLastProcessedBlock
+
+After processing a block, store the block number in Redis (or DB) so indexing resumes correctly after restart.
+
+5. processBlock
+
+Given a block number:
+
+Fetch block + transactions.
+
+Filter for transactions involving interested addresses.
+
+For each relevant tx → call balance check & DB update.
+
+6. checkBalanceAndUpdate
+
+Given userId + address:
+
+Fetch on-chain balance via provider.
+
+Compare with DB balance (findDiff).
+
+If different → update DB + push event (Redis / log).
+
+7. startBlockListener
+
+Subscribes to provider.on("block").
+
+For every new block:
+
+Get last processed block.
+
+Process blocks sequentially (in case one was missed).
+
+Save checkpoint after each block.
+
+8. main
+
+Entry point that:
+
+Loads env/config.
+
+Connects DB.
+
+Loads addresses.
+
+Gets last processed block.
+
+Starts block listener loop.
+
+⚡ Final Function Flow
+
+index.ts should look like this (function flow only, no code yet):
+
+connectDB()
+
+loadInterestedAddresses()
+
+getLastProcessedBlock()
+
+startBlockListener() → inside it:
+
+processBlock(blockNo) → inside it:
+
+checkBalanceAndUpdate(userId, address)
+    
+    
+    */}

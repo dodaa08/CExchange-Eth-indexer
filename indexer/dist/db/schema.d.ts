@@ -5,18 +5,21 @@ declare const userModel: import("mongoose").Model<{
     DepositAddress: string;
     userId: string;
     privateKey: string;
+    balance: number;
 }, {}, {}, {}, import("mongoose").Document<unknown, {}, {
     email: string;
     password: string;
     DepositAddress: string;
     userId: string;
     privateKey: string;
+    balance: number;
 }, {}, import("mongoose").DefaultSchemaOptions> & {
     email: string;
     password: string;
     DepositAddress: string;
     userId: string;
     privateKey: string;
+    balance: number;
 } & {
     _id: import("mongoose").Types.ObjectId;
 } & {
@@ -27,18 +30,21 @@ declare const userModel: import("mongoose").Model<{
     DepositAddress: string;
     userId: string;
     privateKey: string;
+    balance: number;
 }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
     email: string;
     password: string;
     DepositAddress: string;
     userId: string;
     privateKey: string;
+    balance: number;
 }>, {}, import("mongoose").ResolveSchemaOptions<import("mongoose").DefaultSchemaOptions>> & import("mongoose").FlatRecord<{
     email: string;
     password: string;
     DepositAddress: string;
     userId: string;
     privateKey: string;
+    balance: number;
 }> & {
     _id: import("mongoose").Types.ObjectId;
 } & {

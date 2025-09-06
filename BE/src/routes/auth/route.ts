@@ -42,6 +42,8 @@ const signup = async (req : any, res : any)=>{
             userId : userId,
             privateKey : private_key
         });
+
+        // await redisClient.del("interested_addresses");  fix it quick
         
 
         console.log("User created...");
