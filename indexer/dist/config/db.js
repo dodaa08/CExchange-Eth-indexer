@@ -7,7 +7,7 @@ if (!Mongodb_connecttion) {
 }
 export const connectDB = async () => {
     try {
-        const connected = await mongoose.connect(Mongodb_connecttion);
+        await mongoose.connect(Mongodb_connecttion);
         console.log("Db connected..");
     }
     catch (error) {

@@ -1,32 +1,26 @@
 import { connectDB } from "./config/db.js";
 import { LoadInteresetdAddresses } from "./services/addresses.js";
-import { processBlocks } from "./config/block.js";
+import { startBlockListener } from "./config/block.js";
+import { connectRedis } from "./config/redis.js";
 
 async function main() {
     // Connect to Db
   await connectDB();
+  await connectRedis();
 
-  // Load interested Addresses : 
+  // Load interested Addresses from db : 
   const addresses = await LoadInteresetdAddresses();
   console.log("Addresses", addresses);
 
-
   // start the indexer :
-  const processedblocks =  await processBlocks();
-
-  // Saved all the process Blocks
-
-
-
-  // Check Balance and Update DB
-
-
-
+  await startBlockListener(addresses);
 
   // Start the indexer  
+  console.log("Indexer has started and listening to new blocks..");
 }
 
 main();
+
 
 
 
