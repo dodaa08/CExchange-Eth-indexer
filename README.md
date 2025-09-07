@@ -1,6 +1,5 @@
 # 🌟 Ethereum Indexer
 
-Welcome to **Ethereum Indexer**! 🚀  
 A powerful tool to track and index transactions for **interested addresses** on the Ethereum blockchain.
 
 ---
